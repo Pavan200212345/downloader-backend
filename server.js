@@ -1,6 +1,5 @@
 const express = require("express");
 const cors = require("cors");
-const youtubedl = require("yt-dlp-exec");
 
 const app = express();
 app.use(cors());
@@ -10,22 +9,17 @@ app.get("/", (req, res) => {
   res.send("Backend is running 🚀");
 });
 
-// Download route (STABLE VERSION)
-app.get("/download", async (req, res) => {
+// SIMPLE REDIRECT LOGIC (NO yt-dlp)
+app.get("/download", (req, res) => {
   const url = req.query.url;
 
   if (!url) return res.send("No URL");
 
   try {
-    const output = await youtubedl(url, {
-      getUrl: true,
-    });
-
-    const videoUrl = output.split("\n")[0].trim();
-
-    res.redirect(videoUrl);
+    // Direct redirect (basic fallback)
+    res.redirect(url);
   } catch (err) {
-    console.log("ERROR:", err);
+    console.log(err);
     res.send("Download failed ❌");
   }
 });
