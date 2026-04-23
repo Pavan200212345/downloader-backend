@@ -10,13 +10,13 @@ app.get("/", (req, res) => {
   res.send("Backend is running 🚀");
 });
 
-// Download route (LIGHT + WORKING ON RENDER)
+// Download route (NO PYTHON VERSION)
 app.get("/download", (req, res) => {
   const url = req.query.url;
 
   if (!url) return res.send("No URL");
 
-  exec(`python -m yt_dlp -f "best[ext=mp4]" -g "${url}"`, (err, stdout, stderr) => {
+  exec(`npx yt-dlp -f "best[ext=mp4]" -g "${url}"`, (err, stdout, stderr) => {
     if (err) {
       console.log("ERROR:", stderr);
       return res.send("Download failed ❌");
@@ -24,7 +24,6 @@ app.get("/download", (req, res) => {
 
     const videoUrl = stdout.split("\n")[0].trim();
 
-    // redirect user to video file
     res.redirect(videoUrl);
   });
 });
