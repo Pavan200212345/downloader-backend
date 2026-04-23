@@ -10,24 +10,28 @@ app.get("/", (req, res) => {
   res.send("Backend is running 🚀");
 });
 
-// Download route (NO PYTHON VERSION)
+// Download route (STABLE VERSION FOR RENDER)
 app.get("/download", (req, res) => {
   const url = req.query.url;
 
   if (!url) return res.send("No URL");
 
-  exec(`npx yt-dlp -f "best[ext=mp4]" -g "${url}"`, (err, stdout, stderr) => {
+  // Simple yt-dlp command (most stable)
+  exec(`npx yt-dlp -g "${url}"`, (err, stdout, stderr) => {
     if (err) {
       console.log("ERROR:", stderr);
       return res.send("Download failed ❌");
     }
 
+    // Extract video URL
     const videoUrl = stdout.split("\n")[0].trim();
 
+    // Redirect user to actual video
     res.redirect(videoUrl);
   });
 });
 
+// Start server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log("Server running on port " + PORT);
